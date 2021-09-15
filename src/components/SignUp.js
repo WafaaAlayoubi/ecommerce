@@ -1,14 +1,19 @@
-import  { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword  } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import {  signupAsync, selectUser } from '../features/user/userSlice';
+import  { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword  } from 'firebase/auth';
+
 
 const SignUp = () => {
 
   let history = useHistory();
-
   const auth = getAuth();
-  const provider = new GoogleAuthProvider();
+const provider = new GoogleAuthProvider();
 
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+ 
   
   let account = {
     email: "",
@@ -18,24 +23,7 @@ const SignUp = () => {
 
   const loginWithGoogle = () => {
     
-    signInWithPopup(auth, provider)
-  .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
+    
   }
 
   const onSubmit = (e) => {
@@ -55,6 +43,7 @@ const SignUp = () => {
     account.email = "";
       account.password = "";
       account.confirmPassword = "";
+      console.log(user);
       history.push('/');
     // ...
   })
@@ -69,6 +58,7 @@ const SignUp = () => {
 
     return (
       <div className='container'>
+        <h1>{ user.name }</h1>
         <form className='add-form' onSubmit={onSubmit} >
         <div className='form-control'>
           <label>Email</label>
@@ -100,7 +90,7 @@ const SignUp = () => {
 
         <input type='submit' value='Save Account' className='btn btn-block' />
       </form>
-      <button onClick={loginWithGoogle} className='google-btn btn-block'>Sign up with Google</button>
+      <button onClick={() => dispatch(signupAsync())} className='google-btn btn-block'>Sign up with Google</button>
     </div>
     )
   }
