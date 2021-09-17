@@ -1,15 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import {  signupAsync, selectUser } from '../features/user/userSlice';
-import  { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword  } from 'firebase/auth';
-
+import {  signupGoogleAuthAsync, selectUser, signupEmailAndPasswordAsync } from '../features/user/userSlice';
 
 const SignUp = () => {
 
   let history = useHistory();
-  const auth = getAuth();
-const provider = new GoogleAuthProvider();
+  
 
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -19,11 +16,6 @@ const provider = new GoogleAuthProvider();
     email: "",
     password: "",
     confirmPassword: ""
-  }
-
-  const loginWithGoogle = () => {
-    
-    
   }
 
   const onSubmit = (e) => {
@@ -36,29 +28,19 @@ const provider = new GoogleAuthProvider();
       alert("password doesnt match");
       return;      
     }
-    createUserWithEmailAndPassword(auth, account.email, account.password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
+
+    dispatch(signupEmailAndPasswordAsync(account));
+
+    account.password = "";
+    account.confirmPassword = "";
     account.email = "";
-      account.password = "";
-      account.confirmPassword = "";
-      console.log(user);
-      history.push('/');
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
+    history.push('/');
       
   
   }
 
     return (
       <div className='container'>
-        <h1>{ user.name }</h1>
         <form className='add-form' onSubmit={onSubmit} >
         <div className='form-control'>
           <label>Email</label>
@@ -90,7 +72,7 @@ const provider = new GoogleAuthProvider();
 
         <input type='submit' value='Save Account' className='btn btn-block' />
       </form>
-      <button onClick={() => dispatch(signupAsync())} className='google-btn btn-block'>Sign up with Google</button>
+      <button onClick={() => dispatch(signupGoogleAuthAsync())} className='google-btn btn-block'>Sign up with Google</button>
     </div>
     )
   }

@@ -1,6 +1,6 @@
-import  { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword  } from 'firebase/auth';
+import  { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword,signInWithEmailAndPassword  } from 'firebase/auth';
 
-export function signup() {
+export function signupGoogleAuth() {
   
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
@@ -12,7 +12,7 @@ const provider = new GoogleAuthProvider();
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const token = credential.accessToken;
     // The signed-in user info.
-    resolve({ data: result.user });
+    resolve({ data: token });
     // ...
   }).catch((error) => {
     // Handle Errors here.
@@ -26,4 +26,50 @@ const provider = new GoogleAuthProvider();
   })
     );
   }
+
+  
+export function signupEmailAndPassword(account) {
+  
+    const auth = getAuth();
+  
+      return new Promise((resolve) =>
+      createUserWithEmailAndPassword(auth, account.email, account.password)
+      .then((userCredential) => {
+        // Signed in 
+        resolve({ data: userCredential.user });          
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      })
+
+      );
+    }
+
+    export function signinEmailAndPassword(account) {
+  
+      const auth = getAuth();
+      
+          return new Promise((resolve) =>
+          
+          signInWithEmailAndPassword(auth, account.email, account.password)
+          .then((userCredential) => {
+            // Signed in 
+            let xee = userCredential.user;
+            xee = JSON.stringify(xee); 
+            //xee = JSON.parse(xee);
+            window.sessionStorage.setItem('user',xee);
+            resolve({ data: userCredential.user });
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            resolve({ data: {auth: false} });
+          })
+    
+          );
+        }
   

@@ -1,25 +1,36 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { signup } from './userAPI';
+import { signupGoogleAuth, signupEmailAndPassword, signinEmailAndPassword } from './userAPI';
 
 const initialState = {
-    user: {},
+    user: {
+      auth: true
+    },
     status: 'idle',
 
   };
 
-  // export const signinAsync = createAsyncThunk(
-  //   'counter/fetchCount',
-  //   async (user) => {
-  //     const response = await fetchCount(user);
-  //     // The value we return becomes the `fulfilled` action payload
-  //     return response.data;
-  //   }
-  // );
+  export const signinEmailAndPasswordAsync = createAsyncThunk(
+    'user/signinEmailAndPassword',
+    async (account) => {
+      const response = await signinEmailAndPassword(account);
+      // The value we return becomes the `fulfilled` action payload
+      return response.data;
+    }
+  );
 
-  export const signupAsync = createAsyncThunk(
-    'user/signup',
+  export const signupGoogleAuthAsync = createAsyncThunk(
+    'user/signupGoogleAuth',
     async () => {
-      const response = await signup();
+      const response = await signupGoogleAuth();
+      // The value we return becomes the `fulfilled` action payload
+      return response.data;
+    }
+  );
+
+  export const signupEmailAndPasswordAsync = createAsyncThunk(
+    'user/signupEmailAndPassword',
+    async (account) => {
+      const response = await signupEmailAndPassword(account);
       // The value we return becomes the `fulfilled` action payload
       return response.data;
     }
@@ -29,28 +40,32 @@ const initialState = {
     name: 'user',
     initialState,
     reducers: {
+
+    
       
     },
     extraReducers: (builder) => {
       builder
-        // .addCase(signinAsync.pending, (state) => {
-        //   state.status = 'loading';
-        // })
-        // .addCase(signinAsync.fulfilled, (state, action) => {
-        //   state.status = 'idle';
-        //   state.user = action.payload;
-        // })
-        .addCase(signupAsync.pending, (state) => {
+        .addCase(signinEmailAndPasswordAsync.pending, (state) => {
           state.status = 'loading';
         })
-        .addCase(signupAsync.fulfilled, (state, action) => {
+        .addCase(signinEmailAndPasswordAsync.fulfilled, (state, action) => {
+          state.status = 'idle';
+          state.user = action.payload;
+        })
+        
+        .addCase(signupGoogleAuthAsync.pending || signupEmailAndPasswordAsync.pending, (state) => {
+          state.status = 'loading';
+        })
+        .addCase(signupGoogleAuthAsync.fulfilled || signupEmailAndPasswordAsync.fulfilled, (state, action) => {
           state.status = 'idle';
           state.user = action.payload;
         });
     },
   });
 
-export const selectUser = (state) => state.user;
+
+export const selectUser = (state) => state.user.user;
 
 export default userSlice.reducer;
 
