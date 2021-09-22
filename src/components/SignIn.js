@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import {  signupGoogleAuthAsync, selectUser, signinEmailAndPasswordAsync, getSession} from '../features/user/userSlice';
+import {  signupGoogleAuthAsync, selectUser, signinEmailAndPasswordAsync} from '../features/user/userSlice';
 
 const SignIn = () => {
 
   let history = useHistory();
 
   const dispatch = useDispatch();
-  //dispatch(getSession());
 
   const user = useSelector(selectUser);
 
@@ -56,8 +55,10 @@ const SignIn = () => {
 
       <input type='submit' value='Sign In' className='btn btn-block' />
     </form>
-    <button onClick={() => {dispatch(signupGoogleAuthAsync())
-    history.push('/');}} className='google-btn btn-block'>Sign In with Google</button>
+    <button onClick={() => {
+    dispatch(signupGoogleAuthAsync())
+    history.push('/');
+    }} className='google-btn btn-block'>Sign In with Google</button>
   </div>
     )
   }

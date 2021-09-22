@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { signupGoogleAuth, signupEmailAndPassword, signinEmailAndPassword } from './userAPI';
+import { signupGoogleAuth, signupEmailAndPassword, signinEmailAndPassword, checkUser, signOutUser } from './userAPI';
 
 const initialState = {
     user: {
@@ -8,6 +8,24 @@ const initialState = {
     status: 'idle',
 
   };
+
+  export const signOutUserAsync = createAsyncThunk(
+    'user/signOutUser',
+    async () => {
+      const response = await signOutUser();
+      // The value we return becomes the `fulfilled` action payload
+      return response.data;
+    }
+  );
+
+  export const checkUserAsync = createAsyncThunk(
+    'user/checkUser',
+    async () => {
+      const response = await checkUser();
+      // The value we return becomes the `fulfilled` action payload
+      return response.data;
+    }
+  );
 
   export const signinEmailAndPasswordAsync = createAsyncThunk(
     'user/signinEmailAndPassword',
@@ -46,6 +64,21 @@ const initialState = {
     },
     extraReducers: (builder) => {
       builder
+      
+        .addCase(signOutUserAsync.pending , (state) => {
+          state.status = 'loading';
+        })
+        .addCase(signOutUserAsync.fulfilled, (state, action) => {
+          state.status = 'idle';
+          state.user = action.payload;
+        })
+        .addCase(checkUserAsync.pending , (state) => {
+          state.status = 'loading';
+        })
+        .addCase(checkUserAsync.fulfilled, (state, action) => {
+          state.status = 'idle';
+          state.user = action.payload;
+        })
         .addCase(signinEmailAndPasswordAsync.pending, (state) => {
           state.status = 'loading';
         })
@@ -65,7 +98,7 @@ const initialState = {
   });
 
 
-export const selectUser = (state) => state.user.user;
+export const selectUser = (state) => state.user;
 
 export default userSlice.reducer;
 

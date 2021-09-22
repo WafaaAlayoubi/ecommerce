@@ -5,6 +5,8 @@ import Header from './components/Header';
 import Home from './components/Home';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
+import {  checkUserAsync } from './features/user/userSlice';
+import {  useDispatch } from 'react-redux';
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,6 +14,10 @@ import {
 } from "react-router-dom";
 
 function App() {
+
+  const dispatch = useDispatch();
+  dispatch(checkUserAsync());
+
   return (
     <Router>
     <div className="App">
