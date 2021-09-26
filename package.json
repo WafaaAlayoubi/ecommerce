@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/material": "^5.0.1",
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -13,6 +16,7 @@
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "react-simple-image-slider": "^2.2.0",
     "react-use-window-sessionstorage": "^1.0.9"
   },
   "scripts": {
