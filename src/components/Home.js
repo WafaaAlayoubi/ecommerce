@@ -1,36 +1,20 @@
-import { useHistory } from 'react-router-dom';
-import SimpleImageSlider from "react-simple-image-slider";
-import slider2 from "../images/slider2.jpg";
-import slider3 from "../images/slider3.jpg";
-import slider4 from "../images/slider4.jpg";
-import slider5 from "../images/slider5.jpg";
-
-const images = [
-  { url: slider2 },
-  { url: slider3 },
-  { url: slider4 },
-  { url: slider5 },
-];
-
+import homePic from "../images/home.jpg"
+import AnimationButton from "./AnimationButton";
 
 const Home = () => {
 
-  
-  let history = useHistory();
-
     return (
      
-           <SimpleImageSlider
-        width={1400}
-        height={504}
-        images={images}
-        showBullets={true}
-        showNavs={true}
-      />
-      
+      <div className="homeContainer">
+        <img src={homePic} alt="Snow" className="homePic"/>
+        <div className="centered">
+          <div >Text Title</div>
+          <div >Sample Long Headline To Change With Your Text</div>
+          <AnimationButton name="View Products" link="/products" />
+        </div>
+      </div>
     )
   }
-  
   
   export default Home
   

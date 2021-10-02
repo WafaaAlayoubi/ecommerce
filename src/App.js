@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Home from './components/Home';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
+import Products from './components/Products';
 import {  checkUserAsync } from './features/user/userSlice';
 import {  useDispatch } from 'react-redux';
 import {
@@ -24,8 +25,10 @@ function App() {
       <Header/>
       <Switch>
         <Route path="/" exact component={Home}/>
+        <Route path="/home" exact component={Home}/>
         <Route path="/signin"   component={SignIn}/>
         <Route path="/signup"  component={SignUp}/>
+        <Route path="/products"  component={Products}/>
       </Switch>
     </div>
     </Router>
