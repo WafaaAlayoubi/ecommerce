@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,21 +14,24 @@ import ListSubheader from '@mui/material/ListSubheader';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import {  getProductsAsync, selectProduct } from '../features/products/productSlice';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 const drawerWidth = 1000;
 const itemData = [
     {
-      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+      img: 'https://firebasestorage.googleapis.com/v0/b/auth-48dc4.appspot.com/o/pfp.jpg?alt=media&token=99694e50-9957-4d94-8693-a33c7c935cf1',
       title: 'Breakfast',
       author: '@bkristastucchio',
     },
     {
-      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
       title: 'Burger',
       author: '@rollelflex_graphy726',
     },
     {
-      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+      img: 'https://firebasestorage.googleapis.com/v0/b/auth-48dc4.appspot.com/o/pfp.jpg?alt=media&token=99694e50-9957-4d94-8693-a33c7c935cf1',
       title: 'Camera',
       author: '@helloimnik',
     },
@@ -73,17 +76,27 @@ const itemData = [
       author: '@peterlaster',
     },
     {
-      img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
+      img: 'https://firebasestorage.googleapis.com/v0/b/auth-48dc4.appspot.com/o/pfp.jpg?alt=media&token=99694e50-9957-4d94-8693-a33c7c935cf1',
       title: 'Bike',
       author: '@southside_customs',
     },
   ];
 
 const Products = () => {
-    const [page, setPage] = React.useState(1);
+    const [page, setPage] = useState(1);
     const handleChange = (event, value) => {
         setPage(value);
     };
+
+    const dispatch = useDispatch();
+    
+   
+    useEffect(() => {
+      dispatch(getProductsAsync());  
+    }, [])
+  
+    const productsData = useSelector(selectProduct);  
+    
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />       
@@ -120,17 +133,15 @@ const Products = () => {
                 <ImageListItem key="Subheader" cols={3}>
                     <ListSubheader component="div" sx={{fontSize:40}}>Products</ListSubheader>
                 </ImageListItem>
-                {itemData.map((item) => (
+                {productsData.status === 'idle' &&
+                productsData.products.map((item) => (
                 <ImageListItem key={item.img}>
                     <img
-                        src={`${item.img}?w=248&fit=crop&auto=format`}
-                        srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                        alt={item.title}
-                        loading="lazy"
+                        src={item.img}
+                        style={{width:"100%",height:"300px"}}
                     />
                     <ImageListItemBar
-                        title={item.title}
-                        subtitle={item.author}
+                        title={item.name}
                         actionIcon={
                         <IconButton
                             sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
@@ -140,7 +151,8 @@ const Products = () => {
                         }
                     />
                 </ImageListItem>
-                ))}
+                ))
+                }
                 </ImageList>
                 <Stack spacing={1}>
                 <Pagination count={10} variant="outlined" page={page} onChange={handleChange} color="primary" />

@@ -1,4 +1,5 @@
 import  { signOut, getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword,signInWithEmailAndPassword, onAuthStateChanged  } from 'firebase/auth';
+import { getDatabase, ref, set } from "firebase/database";
 
 export function signupGoogleAuth() {
   
@@ -11,6 +12,11 @@ return new Promise((resolve) =>
 // This gives you a Google Access Token. You can use it to access the Google API.
 const credential = GoogleAuthProvider.credentialFromResult(result);
 const user = result.user;
+const db = getDatabase();
+  set(ref(db, 'users/' + user.uid), {
+    username: user.displayName,
+    cart:[]
+  });
 resolve({ data: user });
 // The signed-in user info.
 // ...
