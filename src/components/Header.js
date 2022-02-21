@@ -60,10 +60,10 @@ const Search = styled('div')(({ theme }) => ({
 
 const Header = () => {
 
-    const dispatch = useDispatch();
-
+  const dispatch = useDispatch();
   
    const user = useSelector(selectUser);
+
    const [anchorEl, setAnchorEl] = React.useState(null);
    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   
@@ -164,6 +164,7 @@ const Header = () => {
             <Link to="/products">
               <Tab label="Products" sx={{color:"#fff"}}/>
             </Link>
+            {/* show the sign in button or hide it */}
             <Link to="/signin" >
                { (user.user.auth === true ) && <Tab label="Signin" sx={{color:"#ffffff"}} /> }
             </Link>

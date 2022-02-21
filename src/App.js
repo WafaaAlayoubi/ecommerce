@@ -6,6 +6,7 @@ import Home from './components/Home';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Products from './components/Products';
+import Details from './components/Details'
 import {  checkUserAsync } from './features/user/userSlice';
 import {  useDispatch } from 'react-redux';
 import {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/signin"   component={SignIn}/>
         <Route path="/signup"  component={SignUp}/>
         <Route path="/products"  component={Products}/>
+        <Route path="/details" component={Details}/>
       </Switch>
     </div>
     </Router>

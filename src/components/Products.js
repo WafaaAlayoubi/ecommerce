@@ -16,75 +16,28 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import {  getProductsAsync, selectProduct } from '../features/products/productSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from "react-router-dom";
 
+
+// TODO: fix the sizes menu 
+// ! There is bug here
 
 const drawerWidth = 1000;
-const itemData = [
-    {
-      img: 'https://firebasestorage.googleapis.com/v0/b/auth-48dc4.appspot.com/o/pfp.jpg?alt=media&token=99694e50-9957-4d94-8693-a33c7c935cf1',
-      title: 'Breakfast',
-      author: '@bkristastucchio',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Burger',
-      author: '@rollelflex_graphy726',
-    },
-    {
-      img: 'https://firebasestorage.googleapis.com/v0/b/auth-48dc4.appspot.com/o/pfp.jpg?alt=media&token=99694e50-9957-4d94-8693-a33c7c935cf1',
-      title: 'Camera',
-      author: '@helloimnik',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Coffee',
-      author: '@nolanissac',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-      title: 'Hats',
-      author: '@hjrc33',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-      title: 'Honey',
-      author: '@arwinneil',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-      title: 'Basketball',
-      author: '@tjdragotta',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-      title: 'Fern',
-      author: '@katie_wasserman',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-      title: 'Mushrooms',
-      author: '@silverdalex',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-      title: 'Tomato basil',
-      author: '@shelleypauls',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-      title: 'Sea star',
-      author: '@peterlaster',
-    },
-    {
-      img: 'https://firebasestorage.googleapis.com/v0/b/auth-48dc4.appspot.com/o/pfp.jpg?alt=media&token=99694e50-9957-4d94-8693-a33c7c935cf1',
-      title: 'Bike',
-      author: '@southside_customs',
-    },
-  ];
-
 const Products = () => {
+
     const [page, setPage] = useState(1);
+    const [stateProducts, setStateProducts] = useState([]);
+
+    const productsData = useSelector(selectProduct);
+
+       useEffect(() => {
+       setStateProducts(productsData);
+      
+       
+    });
+
     const handleChange = (event, value) => {
+        
         setPage(value);
     };
 
@@ -93,10 +46,21 @@ const Products = () => {
    
     useEffect(() => {
       dispatch(getProductsAsync());  
-    }, [])
-  
-    const productsData = useSelector(selectProduct);  
+    }, []);    
+
     
+
+    const sizeClicked = (text) => {
+        
+        setStateProducts(stateProducts.products.filter(itemm => itemm.sizes === 'L'));
+        setPage(1);
+      
+    };
+
+ 
+    const productsPage = productsData.products.slice((page-1)*3 , page*3);
+     
+   
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />       
@@ -104,26 +68,24 @@ const Products = () => {
             <Box sx={{ overflow: 'auto', width: drawerWidth }}>
                 <Toolbar sx={{marginTop:-5}}/>
                 <Typography variant="h6" noWrap component="div">
-                    Permanent drawer
+                    Size
                 </Typography>
                     <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                    {['All','S', 'M', 'L', 'XL'].map((text, index) => (
                         <ListItem button key={text}>
-                        
-                        <ListItemText primary={text} />
+                         <ListItemText primary={text} onClick={() => sizeClicked(text)}/>
                         </ListItem>
                     ))}
                     </List>
                     <Divider />
                     <Toolbar sx={{marginTop:-5}}/>
                     <Typography variant="h6" noWrap component="div">
-                    Permanent drawer
+                    Price
                 </Typography>
                 <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                    
-                    <ListItemText primary={text} />
+                {['All', '< 50', '> 50'].map((text, index) => (
+                    <ListItem button key={text}>        
+                      <ListItemText primary={text} />
                     </ListItem>
                 ))}
                 </List>
@@ -133,12 +95,13 @@ const Products = () => {
                 <ImageListItem key="Subheader" cols={3}>
                     <ListSubheader component="div" sx={{fontSize:40}}>Products</ListSubheader>
                 </ImageListItem>
-                {productsData.status === 'idle' &&
-                productsData.products.map((item) => (
+                {productsPage !== [] &&
+                productsPage.map((item) => ( 
                 <ImageListItem key={item.img}>
                     <img
                         src={item.img}
-                        style={{width:"100%",height:"300px"}}
+                        style={{width:"300px",height:"300px",objectFit:'contain'}}
+                        alt= "product pic"
                     />
                     <ImageListItemBar
                         title={item.name}
@@ -146,7 +109,9 @@ const Products = () => {
                         <IconButton
                             sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
                         >
-                            <Typography variant="h6" noWrap component="div">Details</Typography>
+                            <Link to="/details" style={{ textDecoration: 'none', color: 'white' }}>
+                                <Typography Typography variant="h6" noWrap component="div">Details</Typography>
+                            </Link>
                         </IconButton>
                         }
                     />
